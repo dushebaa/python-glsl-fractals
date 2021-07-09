@@ -9,6 +9,7 @@ class Shader:
 
         self.ctx = self.window.ctx
         self.mouse_pos = 0, 0
+        self.scaleFactor = 1
         self.quad = geometry.quad_2d_fs()
 
         vertex   = open('vertex_shader.glsl', 'r').read()
@@ -20,7 +21,15 @@ class Shader:
         )
         
 
-    def draw(self, time: float = 0, target=None):
+    def draw(self, offset = [], scaleFactor=0.1, time: float = 0, target=None):
+        try:
+            self.program['offsetXY'] = offset[0], offset[1]
+        except KeyError:
+            pass
+        try:
+            self.program['scaleFactor'] = scaleFactor
+        except KeyError:
+            pass
         try:
             self.program['iTime'] = time
         except KeyError:
