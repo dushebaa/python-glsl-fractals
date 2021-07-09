@@ -4,6 +4,8 @@ uniform sampler2D background;
 uniform float iTime;
 uniform vec2 iMouse;
 uniform vec2 iResolution;
+uniform float scaleFactor;
+uniform vec2 offsetXY;
 
 in vec2 v_uv;
 out vec4 out_color;
@@ -54,30 +56,32 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
     vec3 col;
     vec2 scaled;
+    vec2 mousexy;
 
     vec2 uv = fragCoord/iResolution.xy; 
-    
-   
-    float t = iTime + 1; //min(iTime+1, maxTime);
-    scaled.x =  -1.74998 + (uv.x - 0.5) / (pow(t, (t/speed))); 
-    scaled.y =  -0.015 - (uv.y - 0.5) / (pow(t, (t/speed))); 
-    
 
-    float i = mandelbrot(vec2(3.5 * uv.x - diameter, 2.5*uv.y-1.25), iters);
+    vec2 mouseScaled = iMouse/(iResolution.xy * scaleFactor);
+
+    mousexy += mouseScaled;
+
+
+    float t = iTime + 1; //min(iTime+1, maxTime);
+    scaled.x =   offsetXY.x + (3*uv.x - 1.5) / pow(abs(scaleFactor)+1, abs(scaleFactor)+1); //(pow(t, (t/speed)));
+    scaled.y =   offsetXY.y - (2*uv.y - 1) / pow(abs(scaleFactor)+1, abs(scaleFactor)+1); //(pow(t, (t/speed)));
+
+    //float i = mandelbrot(vec2(3.5 * uv.x - diameter, 2.5*uv.y-1.25), iters);
     //float i = burningShip(vec2(3.5 * uv.x - diameter, 1 - 2*uv.y), iters);
     //float i = burningShip(scaled, iters);
-    //loat i = mandelbrot(scaled, iters);
+    float i = mandelbrot(scaled, iters);
 
 
-    float p = 32;
+    float p = 10;
     float offset = 0;
-    
+
     float c = sin(p * i/float(iters) + offset)/2 + 1;
 
     if (i == float(iters)) col = vec3(0, 0, 0);
     else col = hsv2rgb(vec3(c, 1.0, 1.0));
-    
-
     
 
     fragColor = vec4(col, 1.0);
