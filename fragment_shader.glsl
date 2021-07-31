@@ -52,7 +52,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float maxTime = 15.0;
     float diameter = 2.5;
 
-    float speed = 8;
+    float speed = 4;
 
     vec3 col;
     vec2 scaled;
@@ -76,7 +76,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 
     float p = 10;
-    float offset = 0;
+    float offset = 180;
 
     float c = sin(p * i/float(iters) + offset)/2 + 1;
 
